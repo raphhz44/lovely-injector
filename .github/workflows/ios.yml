@@ -1,0 +1,28 @@
+name: Build for iOS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: aarch64-apple-ios
+          override: true
+
+      - name: Build dylib
+        run: |
+          cargo build --release --target aarch64-apple-ios
+
+      - name: Upload dylib
+        uses: actions/upload-artifact@v3
+        with:
+          name: lovely-injector-ios
+          path: target/aarch64-apple-ios/release/liblovely_injector.dylib
